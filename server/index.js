@@ -8,8 +8,11 @@ const uri = process.env.MONGO_URI
 
 const mongoose = require("mongoose");
 
+const userRoute = require("./Routers/userRoute")
+
 app.use(express.json());
 app.use(cors());
+app.use("/api/users" , userRoute)
 
 app.get("/" , (req , res)=>{
     res.send("Welcome")
