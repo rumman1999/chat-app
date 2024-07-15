@@ -1,7 +1,7 @@
 import { Stack } from "react-bootstrap"
-import { useFetchRecipientUser } from "../hooks/useFetchRecipient"
-import "../index.css"
-import avatar from "../assets/profile.svg"
+import { useFetchRecipientUser } from "../../hooks/useFetchRecipient"
+import "../../index.css"
+import avatar from "../../assets/profile.svg"
 
 function UserChat({chat , user}) {
 

@@ -2,93 +2,98 @@ import { createContext, useCallback, useEffect, useState } from "react";
 import { baseURL, postRequest } from "../utils/services";
 import PropTypes from 'prop-types';
 
-
 export const AuthContext = createContext();
 
-export const AuthContextProvider = ({children}) =>{
-const [user , setUser ] = useState(null)
-const [registerError , setRegisterError] = useState(null)
-const [isRegisterLoading , setIsRegisterLoading] = useState(false)
-const [registerInfo , setRegisterInfo] = useState({
-    name:"",
-    email:"",
-    password:""
-})
-const [loginInfo , setLoginInfo] = useState({
-    email:"",
-    password:""
-})
-const [loginError , setLoginError] = useState(null)
-useEffect(()=>{
-    const user = localStorage.getItem("User");
-    // console.log("user from storage" , JSON.parse(user));
-    setUser(JSON.parse(user));
-},[])
+export const AuthContextProvider = ({ children }) => {
+    const [user, setUser] = useState(null);
+    const [registerError, setRegisterError] = useState(null);
+    const [isRegisterLoading, setIsRegisterLoading] = useState(false);
+    const [registerInfo, setRegisterInfo] = useState({
+        name: "",
+        email: "",
+        password: ""
+    });
+    const [loginInfo, setLoginInfo] = useState({
+        email: "",
+        password: ""
+    });
+    const [loginError, setLoginError] = useState(null);
 
-const updateRegisteredUserInfo = useCallback((info)=>{
-    setRegisterInfo(info)
-},[])
+    useEffect(() => {
+        const user = localStorage.getItem("User");
+        // console.log("user from storage", JSON.parse(user));
+        setUser(JSON.parse(user));
+    }, []);
 
-const registerUser =useCallback( async (e)=>{
-    e.preventDefault()
-    setIsRegisterLoading(true)
-    setRegisterError(null)
+    const updateRegisteredUserInfo = useCallback((info) => {
+        setRegisterInfo(info);
+    }, []);
 
-    const response = await postRequest(
-        `${baseURL}/users/register` , 
-        JSON.stringify(registerInfo)
-    )
+    // console.log("registerInfo ", registerInfo);
 
-    setIsRegisterLoading(false)
+    const registerUser = useCallback(async (e) => {
+        e.preventDefault();
+        setIsRegisterLoading(true);
+        setRegisterError(null);
 
-    if(response.error) {
-        return setRegisterError(response)
-    }
+        console.log("registerInfo inside registerUser", registerInfo);
 
-    localStorage.setItem("User" , JSON.stringify(response))
-    setUser(response)
-}, [])
+        const response = await postRequest(
+            `${baseURL}/users/register`,
+            JSON.stringify(registerInfo)
+        );
 
-const updateLoginUserInfo = useCallback((info)=>{
-    setLoginInfo(info)
-},[])
+        setIsRegisterLoading(false);
 
-const loginUser = useCallback(async (e)=>{
-    e.preventDefault()
-    setLoginError(null)
-    console.log(loginInfo)
+        if (response.error) {
+            return setRegisterError(response);
+        }
 
-    const response = await postRequest(
-        `${baseURL}/users/login` , 
-        JSON.stringify(loginInfo)
-    )
+        localStorage.setItem("User", JSON.stringify(response));
+        setUser(response);
+    }, [registerInfo]);
 
-    if(response.error) {
-        return setLoginError(response)
-    }
+    const updateLoginUserInfo = useCallback((info) => {
+        setLoginInfo(info);
+    }, []);
 
-    localStorage.setItem("User" , JSON.stringify(response))
-    setUser(response)
-} , [])
+    const loginUser = useCallback(async (e) => {
+        e.preventDefault();
+        setLoginError(null);
+        console.log(loginInfo);
 
-const logoutUser = useCallback(()=>{
-    localStorage.removeItem("User")
-    setUser(null)
-},[])
+        const response = await postRequest(
+            `${baseURL}/users/login`,
+            JSON.stringify(loginInfo)
+        );
 
-    return <AuthContext.Provider value={{
-        user,  setUser,
-        registerUser , updateRegisteredUserInfo,
-        isRegisterLoading , setIsRegisterLoading,
-        registerError , setRegisterError,
-        registerInfo , setRegisterInfo,
-        logoutUser , loginUser,
-        loginInfo , updateLoginUserInfo , loginError
-    }}>
-        {children}
-    </AuthContext.Provider>
+        if (response.error) {
+            return setLoginError(response);
+        }
+
+        localStorage.setItem("User", JSON.stringify(response));
+        setUser(response);
+    }, [loginInfo]);
+
+    const logoutUser = useCallback(() => {
+        localStorage.removeItem("User");
+        setUser(null);
+    }, []);
+
+    return (
+        <AuthContext.Provider value={{
+            user, setUser,
+            registerUser, updateRegisteredUserInfo,
+            isRegisterLoading, setIsRegisterLoading,
+            registerError, setRegisterError,
+            registerInfo, setRegisterInfo,
+            logoutUser, loginUser,
+            loginInfo, updateLoginUserInfo, loginError
+        }}>
+            {children}
+        </AuthContext.Provider>
+    );
 }
-
 
 AuthContextProvider.propTypes = {
     children: PropTypes.node.isRequired

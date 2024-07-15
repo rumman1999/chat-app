@@ -4,9 +4,10 @@ import { AuthContext } from "../context/AuthContext"
 
 function Register() {
   const {registerInfo , registerUser , updateRegisteredUserInfo , registerError , isRegisterLoading} = useContext(AuthContext)
+  
   return (
     <>
-    <Form onSubmit={registerUser}>
+    <Form onSubmit={(e)=>registerUser(e)}>
       <Row style={{
         height:"80vh",
         width:"50%",
