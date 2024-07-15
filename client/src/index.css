@@ -11,6 +11,10 @@ body {
   display: flex;
   margin-bottom: 1rem;
 }
+.justify-content-start{
+    display: flex;
+    justify-content: flex-start;
+}
 
 .single-user {
   background: rgb(0, 213, 255);
