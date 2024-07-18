@@ -1,6 +1,7 @@
 # Dependency directories
 server/node_modules
 client.node_modules
+socket/node_modules
 
 # Environment variables
 .env

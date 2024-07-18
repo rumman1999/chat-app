@@ -13,28 +13,29 @@ function Chat() {
   // console.log(userChats)
   return (
     <Container>
-      <PotentialChat/>
-      <Stack  direction="horizontal">
+    <PotentialChat />
+    <Stack direction="horizontal">
       {
-        userChats?.length < 1 ? <>Start a new Chat....</> : 
+        userChats?.length < 1 ? <>Start a new Chat....</> :
         <Stack direction="vertical" gap={4} className="align-items-start">
           {
             isUserChatLoading && <p>Loading Chats</p>
           }
           {
-            userChats?.map((chat , index)=>(
-              <div key={index} onClick={()=>updateCurrentChat(chat)}>
-                <UserChat chat={chat} user={user}/>
+            userChats?.map((chat, index) => (
+              <div key={index} onClick={() => updateCurrentChat(chat)}>
+                <UserChat chat={chat} user={user} />
               </div>
             ))
           }
         </Stack>
-       }
-       <Stack className="messages-box flex-grow-5 pe-3" gap={3}>
-        <ChatBox/>
-       </Stack>
+      }
+      <Stack className="messages-box flex-grow-1 pe-3" gap={3}>
+        <ChatBox />
       </Stack>
-    </Container>
+    </Stack>
+  </Container>
+  
   )
 }
 
