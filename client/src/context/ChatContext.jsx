@@ -1,6 +1,7 @@
 import {  createContext, useCallback, useEffect, useState } from "react";
 import PropTypes from 'prop-types';
 import { baseURL, getRequest, postRequest } from "../utils/services";
+import  { io } from "socket.io-client"
 
 
 export const ChatContext = createContext();
@@ -17,9 +18,57 @@ export const ChatContextProvider = ({children , user}) => {
     const [userMessages , setUserMessages] = useState(null);
     const [isUserMessagesLoading , setIsMessagesLoading] = useState(false);
     const [messageError , setMessageError] = useState(null);
+    const [sendTextMessageError , setSendTextMessageError] = useState(null)
+    const[newMessage , setNewMessage] = useState('')
+
+    const [socket , setSocket ] = useState(null)
+    const [onlineUsers , setOnlineUsers] = useState([])
 
 
-    console.log("userMessages",userMessages)
+    console.log("onlineUsers",onlineUsers)
+
+    //initializing socket
+    useEffect(()=>{
+        const newSocket = io("http://localhost:3000");
+        setSocket(newSocket)
+
+        return () => {
+            newSocket.disconnect();
+        }
+    },[user])
+
+    useEffect(()=>{
+        if(socket === null) return
+        // console.log(user?._id)
+        socket.emit("addNewUser" , user?._id)
+        socket.on("getOnlineUser" , (res)=>{
+            setOnlineUsers(res)
+        })
+    },[socket])
+
+    //send message 
+    useEffect(() => {
+        if (socket === null || !newMessage) return;
+        const recipientId = currentChat?.members.find((id) => id !== user?._id);
+        socket.emit("sendMessage", { ...newMessage, recipientId });
+        setNewMessage(''); // Reset newMessage after sending
+    }, [newMessage, socket, currentChat, user]);
+    
+
+    // //recieve message 
+    useEffect(() => {
+        if (socket === null) return;
+    
+        socket.on("getMessage", (res) => {
+            if (currentChat?._id !== res.chatId) return;
+            setUserMessages(prev => [...prev, res]);
+        });
+    
+        return () => {
+            socket.off("getMessage");
+        };
+    }, [socket, currentChat]);
+    
  
     useEffect(()=>{
         const getUser = async() => {
@@ -108,10 +157,31 @@ export const ChatContextProvider = ({children , user}) => {
         setCurrentChat(chat)
     } ,[])
 
+
+    const sendTextMessage = useCallback(async(textMessage , sender , currentChatId , setTextMessage)=> {
+        if(!textMessage) return console.log("You must type something....");
+
+        const response =await postRequest(`${baseURL}/message` , JSON.stringify({
+            chatId : currentChatId,
+            senderId :sender._id,
+            text : textMessage
+        }))
+
+        if(response.error){
+            return setSendTextMessageError(response)
+        }
+
+        setNewMessage(response)
+        setUserMessages(prev => [...prev ,response])
+        setTextMessage("")
+        
+    }, [])
+
     return(<ChatContext.Provider value={{
         userChats , setUserChats,
         userChatsError , isUserChatLoading,
-        potentialChats , createChat , updateCurrentChat , userMessages , isUserMessagesLoading , messageError
+        potentialChats , createChat ,currentChat, updateCurrentChat , userMessages , isUserMessagesLoading , 
+        messageError,sendTextMessage,onlineUsers,
     }}>
         {children}
     </ChatContext.Provider>)
