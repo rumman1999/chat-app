@@ -11,7 +11,7 @@ function UserChat({chat , user}) {
     const { onlineUsers } = useContext(ChatContext)
 
     const isOnline =  onlineUsers?.some((user) => user?.userId === recipientUser?._id)
-    console.log(isOnline)
+    // console.log(isOnline)
   return (
     <Stack direction="horizontal" gap={3} className="user-card align-items-center p-1 justify-content-between" role="button">
         <div className="d-flex">
