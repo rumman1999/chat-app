@@ -29,7 +29,7 @@ export const ChatContextProvider = ({children , user}) => {
 
     //initializing socket
     useEffect(()=>{
-        const newSocket = io("http://localhost:3000");
+        const newSocket = io("https://chat-app-scket.onrender.com");
         setSocket(newSocket)
 
         return () => {
