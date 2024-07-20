@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { AuthContext } from "../../context/AuthContext";
 import { ChatContext } from "../../context/ChatContext";
 import { useFetchRecipientUser } from "../../hooks/useFetchRecipient";
@@ -9,7 +9,7 @@ import styled from 'styled-components';
 
 // Styled components for the chat box
 const ChatContainer = styled(Stack)`
-  width: 100%;
+  width: 50%;
   height: 100%;
   background: #2c2c2c; /* Dark background */
   border-radius: 8px;
@@ -85,13 +85,23 @@ const SendButton = styled.button`
 `;
 
 function ChatBox() {
+  const containerRef = useRef(null)
   const { user } = useContext(AuthContext);
   const { currentChat, userMessages, isMessagesLoading, sendTextMessage } = useContext(ChatContext);
   const { recipientUser } = useFetchRecipientUser(currentChat, user);
   const [textMessage, setTextMessage] = useState("");
 
+  const handleKeyDown = useCallback((event) => {
+    if (event.key === 'Enter') {
+      sendTextMessage(textMessage, user, currentChat._id, setTextMessage);
+    }
+  }, [textMessage, user, currentChat, sendTextMessage, setTextMessage]);
+
   useEffect(() => {
     // Optional side effects or logging
+    if (containerRef.current) {
+      containerRef.current.scrollTop = containerRef.current.scrollHeight;
+    }
   }, [userMessages]);
 
   if (!recipientUser) return <p style={{ width: "100%", textAlign: "center", color: "#aaa" }}>No Conversation selected Yet .......</p>;
@@ -99,9 +109,9 @@ function ChatBox() {
   if (isMessagesLoading) return <p style={{ width: "100%", textAlign: "center", color: "#aaa" }}>Loading Chat .......</p>;
 
   return (
-    <ChatContainer>
+    <ChatContainer >
       <ChatHeader>{recipientUser?.name}</ChatHeader>
-      <MessagesContainer gap={3}>
+      <MessagesContainer gap={3} ref={containerRef}>
         {userMessages && userMessages.map((message, index) => (
           <Message key={index} isSelf={message?.senderId === user?._id}>
             <span>{message.text}</span>
@@ -116,6 +126,7 @@ function ChatBox() {
           fontFamily="Nunito"
           borderColor="rgba(72, 112, 223, 0.2)"
           placeholder="Type a message..."
+          onKeyDown={handleKeyDown}
         />
         <SendButton onClick={() => sendTextMessage(textMessage, user, currentChat._id, setTextMessage)}>
           Send

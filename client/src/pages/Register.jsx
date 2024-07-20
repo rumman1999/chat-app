@@ -3,6 +3,7 @@ import { Alert, Button, Form, Stack } from "react-bootstrap";
 import { motion } from "framer-motion";
 import { AuthContext } from "../context/AuthContext";
 import styled from 'styled-components';
+import { useNavigate } from "react-router-dom";
 
 const Container = styled(motion.div)`
   width: 100%;
@@ -101,6 +102,7 @@ const ErrorAlert = styled(motion(Alert))`
 `;
 
 function Register() {
+  const navigate = useNavigate()
   const { registerInfo, registerUser, updateRegisteredUserInfo, registerError, isRegisterLoading } = useContext(AuthContext);
   const [errorFields, setErrorFields] = useState({ name: false, email: false, password: false });
 
@@ -131,6 +133,10 @@ function Register() {
           </Heading>
           <Stack gap={3}>
             <StyledFormControl
+            style={{
+              backgroundColor:"#333",
+              color:"smokewhite"
+            }}
               type="text"
               placeholder="Name"
               name="name"
@@ -141,6 +147,10 @@ function Register() {
               transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
             />
             <StyledFormControl
+            style={{
+              backgroundColor:"#333",
+              color:"smokewhite"
+            }}
               type="email"
               placeholder="Email"
               name="email"
@@ -151,6 +161,10 @@ function Register() {
               transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
             />
             <StyledFormControl
+            style={{
+              backgroundColor:"#333",
+              color:"smokewhite"
+            }}
               type="password"
               placeholder="Password"
               name="password"
@@ -171,6 +185,9 @@ function Register() {
             )}
             <StyledButton type="submit">
               {isRegisterLoading ? "Creating Your Account" : "Register"}
+            </StyledButton>
+            <StyledButton onClick={()=>navigate("/login")}>
+              Have Account ? Login
             </StyledButton>
           </Stack>
         </Form>

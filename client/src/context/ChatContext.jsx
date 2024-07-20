@@ -25,7 +25,7 @@ export const ChatContextProvider = ({children , user}) => {
     const [onlineUsers , setOnlineUsers] = useState([])
 
 
-    console.log("onlineUsers",onlineUsers)
+    // console.log("onlineUsers",onlineUsers ,sendTextMessageError)
 
     //initializing socket
     useEffect(()=>{
@@ -148,8 +148,10 @@ export const ChatContextProvider = ({children , user}) => {
         if(response.error){
             return console.log("Error fetching chat" , response)
         }
-
-        setUserChats(prev => [...prev , response])
+        const index = userChats.find(ele => ele === response)
+        if(index === -1){
+            setUserChats(prev => [...prev , response])
+        }
     },[])
 
     const updateCurrentChat = useCallback((chat)=>{
@@ -181,7 +183,7 @@ export const ChatContextProvider = ({children , user}) => {
         userChats , setUserChats,
         userChatsError , isUserChatLoading,
         potentialChats , createChat ,currentChat, updateCurrentChat , userMessages , isUserMessagesLoading , 
-        messageError,sendTextMessage,onlineUsers,
+        messageError,sendTextMessage,onlineUsers,sendTextMessageError
     }}>
         {children}
     </ChatContext.Provider>)

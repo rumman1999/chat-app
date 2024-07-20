@@ -3,6 +3,7 @@ import { Alert, Form, Stack } from "react-bootstrap";
 import { motion } from "framer-motion";
 import { AuthContext } from "../context/AuthContext";
 import styled from 'styled-components';
+import { useNavigate } from "react-router-dom";
 
 const Container = styled(motion.div)`
   width: 100%;
@@ -62,22 +63,13 @@ const StyledButton = styled(motion.button)`
   &:active,
   &:focus-visible {
     outline: none; /* Remove default focus outline */
-    background-color: #000; /* Maintain black background on focus */
+    background-color: #000 !important; /* Maintain black background on focus */
     border-color: #666; /* Maintain border color on focus */
     color: #f5f5f5; /* Maintain text color on focus */
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3); /* Light glow effect on focus */
     -webkit-appearance: none; /* Remove default styles in WebKit browsers */
     -moz-appearance: none; /* Remove default styles in Mozilla browsers */
     appearance: none; /* Remove default styles in other browsers */
-  }
-  
-  /* Ensure consistent appearance during transitions */
-  &:focus:not(:focus-visible),
-  &:active {
-    background-color: #000;
-    border-color: #666;
-    color: #f5f5f5;
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
   }
 `;
 
@@ -99,6 +91,7 @@ const ErrorAlert = styled(motion(Alert))`
 `;
 
 function Login() {
+  const navigate = useNavigate()
   const { loginInfo, loginUser, updateLoginUserInfo, loginError } = useContext(AuthContext);
   const [errorFields, setErrorFields] = useState({ email: false, password: false });
 
@@ -129,6 +122,10 @@ function Login() {
           </Heading>
           <Stack gap={3}>
             <StyledFormControl
+            style={{
+              backgroundColor:"#333",
+              color:"smokewhite"
+            }}
               type="email"
               placeholder="Email"
               name="email"
@@ -139,6 +136,10 @@ function Login() {
               transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
             />
             <StyledFormControl
+            style={{
+              backgroundColor:"#333",
+              color:"smokewhite"
+            }}
               type="password"
               placeholder="Password"
               name="password"
@@ -159,6 +160,9 @@ function Login() {
             )}
             <StyledButton type="submit" whileTap={{ scale: 0.95 }}>
               Login
+            </StyledButton>
+            <StyledButton onClick={()=>navigate("/register")} whileTap={{ scale: 0.95 }}>
+              Not Signed Yet , Register
             </StyledButton>
           </Stack>
         </Form>
