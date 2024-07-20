@@ -1,9 +1,10 @@
 import { useContext, useState } from "react";
-import { Container, Stack, Button } from "react-bootstrap";
+import { Container, Stack } from "react-bootstrap";
 import UserChat from "../components/chat/UserChat";
 import { AuthContext } from "../context/AuthContext";
 import PotentialChat from "../components/chat/PotentialChat";
 import ChatBox from "../components/chat/ChatBox";
+import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import "../index.css";
 import { ChatContext } from "../context/ChatContext";
@@ -68,17 +69,25 @@ const NoChatsMessage = styled.div`
   color: #aaa; /* Lighter grey text */
 `;
 
-const ToggleButton = styled(Button)`
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background: #333;
+
+const ToggleButton = styled(motion.button)`
+  float:inline-end;
+  background: #282c34;
+  color: white;
   border: none;
-  color: #fff;
-  z-index: 1001; /* Ensure it is above the sidebar */
-  
+  padding: 10px 20px;
+  font-size: 1rem;
+  cursor: pointer;
+  outline: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s;
+
   &:hover {
-    background: #444;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  }
+
+  &:active {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
   }
 `;
 
@@ -91,13 +100,17 @@ function Chat() {
 
   return (
     <ChatContainer>
-      <ChatHeader>
+      <ChatHeader style={{height:"10vh"}}>
         Chat Application
-        <ToggleButton onClick={toggleSidebar}>
-          {sidebarOpen ? 'Hide Potential Chats' : 'Show Potential Chats'}
-        </ToggleButton>
+        <ToggleButton
+        onClick={toggleSidebar}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+      >
+        {sidebarOpen ? 'Hide Potential Chats' : 'Show Potential Chats'}
+      </ToggleButton>
       </ChatHeader>
-      <Stack direction="horizontal" style={{ height: 'calc(100vh - 56px)', position: 'relative' }}>
+      <Stack direction="horizontal" style={{ height: '90vh', position: 'relative' }}>
         <ChatSidebar isOpen={sidebarOpen} direction="vertical" gap={3} className="align-items-start">
           <PotentialChat />
         </ChatSidebar>

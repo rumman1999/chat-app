@@ -1,10 +1,10 @@
 import { useContext } from "react";
-import { Container, Stack } from "react-bootstrap";
+import {  Stack } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { motion } from "framer-motion";
 import styled from "styled-components";
-import { TbSquareRoundedLetterRFilled } from "react-icons/tb";
+import { TbSquareRoundedLetterRFilled, TbMassage } from "react-icons/tb";
 import { FaSignOutAlt, FaSignInAlt, FaUserPlus } from "react-icons/fa";
 
 const Sidebar = styled(motion.div)`
@@ -32,6 +32,7 @@ const Sidebar = styled(motion.div)`
 const SidebarContent = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content:space-between;
   width: 100%;
   height: 100%;
   overflow: hidden;
@@ -40,9 +41,6 @@ const SidebarContent = styled.div`
 `;
 
 const Brand = styled.div`
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin: 0.6rem;
 `;
 
 const StyledLink = styled(Link)`
@@ -58,7 +56,6 @@ const StyledLink = styled(Link)`
 `;
 
 const LogOutContainer = styled.div`
-  margin-top: auto;
   width: 100%;
 `;
 
@@ -72,15 +69,32 @@ function NavBar() {
   return (
     <Sidebar
       initial={{ width: 50 }}
-      whileHover={{ width: 250 }}
+      whileHover={{ width: 200 }}
       transition={{ duration: 0.3 }}
     >
       <SidebarContent>
+        <StyledLink  to="/" style={{margin:"0.5rem"}}>
         <Brand>
           <TbSquareRoundedLetterRFilled style={{ height: "32px", width: "32px" }} />
         </Brand>
+        </StyledLink>
+        
+        <Stack direction="column" gap={3} style={{ width: "100%" , height:"auto" , flex:"none"}} >
+          {!user && (
+            <LogOutContainer>
+              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                <StyledLink to="/chat">
+                  <IconWrapper>
+                    <TbMassage style={{ height: "24px", width: "24px" }}/>
+                  </IconWrapper>
+                  <span className="link-text">Chat</span>
+                </StyledLink>
+              </motion.div>
+            </LogOutContainer>
+          )}
+        </Stack>
 
-        <Stack direction="column" gap={3} style={{ width: "100%" }}>
+        <Stack direction="column" gap={3} style={{ width: "100%" , height:"auto" , flex:"none"}} >
           {!user && (
             <LogOutContainer>
               <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
