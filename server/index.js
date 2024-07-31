@@ -11,12 +11,17 @@ const mongoose = require("mongoose");
 const userRoute = require("./Routers/userRoute")
 const chatRoute = require("./Routers/chatRoute")
 const messageRoute = require("./Routers/messageRoute")
+const openaiRoute = require("./Routers/openaiRoutes")
+const {portfolio} = require("./services/portfolioService")
 
 app.use(express.json());
 app.use(cors());
 app.use("/api/users" , userRoute)
 app.use("/api/chats" , chatRoute)
 app.use("/api/message" , messageRoute)
+app.use("/api" , openaiRoute)
+portfolio
+
 
 app.get("/" , (req , res)=>{
     res.send("Welcome")

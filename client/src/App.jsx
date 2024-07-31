@@ -10,6 +10,7 @@ import { useContext } from 'react'
 import { AuthContext } from './context/AuthContext'
 import { ChatContextProvider } from './context/ChatContext'
 import Home from './pages/Home'
+import Test from './pages/Test'
 
 function App() {
   const {user} = useContext(AuthContext)
@@ -26,10 +27,11 @@ function App() {
     <div className='main-container'>
       <Routes>
       <Route path="/" element={<Home/>}/>
-      <Route path="/chat" element={user ? <Chat/> : <Login/>}/>
-      <Route path="/register" element={user ? <Chat/> : <Register/>}/>
-      <Route path="/login" element={user ? <Chat/> : <Login/>}/>      
+      <Route path="/chat" element={<Chat/>}/>
+      <Route path="/register" element={ <Register/>}/>
+      <Route path="/login" element={ <Login/>}/>      
       <Route path='*' element={<Navigate to="/"/>}/>
+      <Route path='/test' element={<Test/>}/>
     </Routes>
     </div>
     </ChatContextProvider>
