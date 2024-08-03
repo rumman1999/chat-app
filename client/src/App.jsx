@@ -14,12 +14,12 @@ import Test from './pages/Test'
 
 function App() {
   const {user} = useContext(AuthContext)
-  // console.log(user)
 
   const location = useLocation();
   
   // Determine whether the Navbar should be shown based on the current route
   const showNavbar = location.pathname !== '/';
+  
 
   return (
     <ChatContextProvider user={user}>

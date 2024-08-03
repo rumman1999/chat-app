@@ -36,7 +36,7 @@ export const AuthContextProvider = ({ children }) => {
         setIsRegisterLoading(true);
         setRegisterError(null);
 
-        console.log("registerInfo inside registerUser", registerInfo);
+        // console.log("registerInfo inside registerUser", registerInfo);
 
         const response = await postRequest(
             `${baseURL}/users/register`,
@@ -51,6 +51,7 @@ export const AuthContextProvider = ({ children }) => {
 
         localStorage.setItem("User", JSON.stringify(response));
         setUser(response);
+        return response
     }, [registerInfo]);
 
     const updateLoginUserInfo = useCallback((info) => {
@@ -73,6 +74,7 @@ export const AuthContextProvider = ({ children }) => {
 
         localStorage.setItem("User", JSON.stringify(response));
         setUser(response);
+        return response
     }, [loginInfo]);
 
     const logoutUser = useCallback(() => {

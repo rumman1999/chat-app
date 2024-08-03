@@ -4,6 +4,8 @@ import bgVideo from "../../public/bgVideo/7989448-hd_1920_1080_25fps.mp4"
 import "../css/landing.css"
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
 const ContentContainer = styled.div`
   color: #333;
@@ -59,8 +61,16 @@ const variants = {
 };
 
 function Home() {
-
+  const { user } = useContext(AuthContext);
     const navigate = useNavigate()
+
+    const navigateFunc = () => {
+      if(user){
+        navigate("/chat")
+      }else{
+        navigate("/login")
+      }
+    }
   return (
     <div className="landing-page">
     <video autoPlay loop muted className="background-video">
@@ -90,7 +100,7 @@ function Home() {
         initial="hidden"
         animate="visible"
         transition={{ duration: 10, delay: 0.2 }}
-        onClick={()=>navigate("/chat")}
+        onClick={()=>navigateFunc()}
       >
         Get Started
       </Button>

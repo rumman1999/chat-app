@@ -1,6 +1,6 @@
 import { useContext } from "react";
 import {  Stack } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../context/AuthContext";
 import { motion } from "framer-motion";
 import styled from "styled-components";
@@ -65,6 +65,15 @@ const IconWrapper = styled.span`
 
 function NavBar() {
   const { user, logoutUser } = useContext(AuthContext);
+  const navigate = useNavigate()
+
+  const navigateTo = (path) => {
+    if(user){
+      navigate(path)
+    }else{
+      navigate("/login")
+    }
+  }
 
   return (
     <Sidebar
@@ -80,10 +89,10 @@ function NavBar() {
         </StyledLink>
         
         <Stack direction="column" gap={3} style={{ width: "100%" , height:"auto" , flex:"none"}} >
-          {!user && (
+          {user && (
             <LogOutContainer>
               <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                <StyledLink to="/chat">
+                <StyledLink onClick={()=>navigateTo("/chat")}>
                   <IconWrapper>
                     <TbMassage style={{ height: "24px", width: "24px" }}/>
                   </IconWrapper>

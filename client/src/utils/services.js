@@ -10,7 +10,7 @@ export const postRequest = async (url , body) =>{
     })
 
     const data = await response.json();
-    console.log(data)
+    // console.log(data)
 
     if(!response.ok){
         let message ; 

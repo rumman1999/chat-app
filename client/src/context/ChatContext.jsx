@@ -9,7 +9,7 @@ export const ChatContext = createContext();
 export const ChatContextProvider = ({children , user}) => {
     // console.log(user)
 
-    const [userChats , setUserChats] = useState(null)
+    const [userChats , setUserChats] = useState([])
     const [isUserChatLoading , setIsUserChatLoading] =  useState(false)
     const [userChatsError , setUserChatError] = useState(null)
     const [potentialChats , setPotentialChats] = useState([])
@@ -25,8 +25,64 @@ export const ChatContextProvider = ({children , user}) => {
     const [onlineUsers , setOnlineUsers] = useState([])
 
 
-    // console.log("onlineUsers",onlineUsers ,sendTextMessageError)
+    const getUserChats = async() => {
+        // console.log("response  user" , user)
+        setIsUserChatLoading(true)
+        setUserChatError(null)
+        if(user?._id){
+            const response = await getRequest(`${baseURL}/chats/${user?._id}`)
+            
+            setIsUserChatLoading(false)
+            if(response.error){
+                console.log(response);
+                return setUserChatError(response)
+            }
+            
+            console.log("response chat of user" , response)
+            setUserChats(response)
+        }
+    }
 
+    const getUser = async() => {
+        // console.count("first")
+
+        const response = await getRequest(`${baseURL}/users/getUsers`)
+         
+            if(response.error){
+                console.log("Error fetching users " , response);
+                return setUserChatError(response)
+            }
+            const pChats = response.filter((u)=>{
+                let isChatCreated = false
+                
+
+                // console.log(user._id === u._id);
+                if(user?._id === u?._id) return false
+                
+                if(userChats){
+                    isChatCreated = userChats?.some((chat)=>{
+                        return chat.members[0] === u._id || chat.members[1] === u._id
+                    })
+                }
+
+                return !isChatCreated
+            })
+
+            setPotentialChats(pChats)
+    }
+
+    const getUserMessages = async() => {
+        setIsMessagesLoading(true)
+        setMessageError(null)
+            const response = await getRequest(`${baseURL}/message/${currentChat?._id}`)
+            
+            setIsMessagesLoading(false)
+            if(response.error){
+                return setUserChatError(response)
+            }
+            
+            setUserMessages(response)
+        }
     //initializing socket
     useEffect(()=>{
         const newSocket = io("https://chat-app-scket.onrender.com");
@@ -71,88 +127,45 @@ export const ChatContextProvider = ({children , user}) => {
     
  
     useEffect(()=>{
-        const getUser = async() => {
-            // console.count("first")
-
-            const response = await getRequest(`${baseURL}/users/getUsers`)
-             
-                if(response.error){
-                    console.log("Error fetching users " , response);
-                    return setUserChatError(response)
-                }
-                const pChats = response.filter((u)=>{
-                    let isChatCreated = false
-                    
-
-                    // console.log(user._id === u._id);
-                    if(user?._id === u?._id) return false
-                    
-                    if(userChats){
-                        isChatCreated = userChats?.some((chat)=>{
-                            return chat.members[0] === u._id || chat.members[1] === u._id
-                        })
-                    }
-
-                    return !isChatCreated
-                })
-
-                setPotentialChats(pChats)
-        }
+        
         getUser()
+        getUserChats()
     },[])
 
     useEffect(()=>{
-        const getUserChats = async() => {
-            // console.log("response  user" , user)
-            setIsUserChatLoading(true)
-            setUserChatError(null)
-            if(user?._id){
-                const response = await getRequest(`${baseURL}/chats/${user?._id}`)
-                
-                setIsUserChatLoading(false)
-                if(response.error){
-                    console.log(response);
-                    return setUserChatError(response)
-                }
-                
-                // console.log("response chat of user" , response)
-                setUserChats(response)
-            }
-        }
+        
         getUserChats()
-
     },[user])
 
     useEffect(()=>{
 
-        const getUserMessages = async() => {
-            setIsMessagesLoading(true)
-            setMessageError(null)
-                const response = await getRequest(`${baseURL}/message/${currentChat?._id}`)
-                
-                setIsMessagesLoading(false)
-                if(response.error){
-                    return setUserChatError(response)
-                }
-                
-                setUserMessages(response)
-            }
+        
         getUserMessages()
 
     },[currentChat])
 
-    const createChat = useCallback(async(firstId , secondId) => {
-        const response = await postRequest(`${baseURL}/chats` , JSON.stringify({
-            firstId , secondId
-        }))
-        if(response.error){
-            return console.log("Error fetching chat" , response)
+    const createChat = useCallback(async (firstId, secondId) => {
+        const response = await postRequest(`${baseURL}/chats`, JSON.stringify({
+            firstId, secondId
+        }));
+        console.log("response", response, "userChats", userChats);
+    
+        if (response.error) {
+            return console.log("Error creating chat", response);
         }
-        const index = userChats.find(ele => ele === response)
-        if(index === -1){
-            setUserChats(prev => [...prev , response])
+    
+        // Assuming response contains the created chat object with an id
+        if (userChats && userChats.some(chat => chat._id === response._id)) {
+            console.log("Chat already exists");
+        } else {
+            if (userChats) {
+                setUserChats(prev => [...prev, response]);
+            } else {
+                setUserChats([response]);
+            }
         }
-    },[])
+    }, [userChats]);
+    
 
     const updateCurrentChat = useCallback((chat)=>{
         // console.log(chat)

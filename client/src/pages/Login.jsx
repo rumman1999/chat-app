@@ -105,6 +105,13 @@ function Login() {
     }
   };
 
+  const loginFunc =  (e) => {
+    const res = loginUser(e);
+    if(res){
+      navigate("/chat")
+    }
+  }
+
   return (
     <Container
       initial={{ opacity: 0, y: -50 }}
@@ -112,7 +119,7 @@ function Login() {
       transition={{ duration: 0.5 }}
     >
       <FormWrapper>
-        <Form onSubmit={(e) => loginUser(e)}>
+        <Form onSubmit={(e) => loginFunc(e)}>
           <Heading
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -124,7 +131,7 @@ function Login() {
             <StyledFormControl
             style={{
               backgroundColor:"#333",
-              color:"smokewhite"
+              color:"white"
             }}
               type="email"
               placeholder="Email"
@@ -138,7 +145,7 @@ function Login() {
             <StyledFormControl
             style={{
               backgroundColor:"#333",
-              color:"smokewhite"
+              color:"white"
             }}
               type="password"
               placeholder="Password"

@@ -37,7 +37,8 @@ const StyledFormControl = styled(Form.Control)`
   box-shadow: ${({ hasError }) => hasError ? '0 0 8px rgba(217, 83, 79, 0.6)' : 'none'}; /* Dynamic shadow based on error */
   &:focus {
     outline: none;
-    border-color: ${({ hasError }) => hasError ? '#d9534f' : '#0070f3'}; /* Border color on focus */
+    border-color: ${({ hasError }) => hasError ? '#d9534f' : '#0070f3'}; 
+    color:#fff
   }
 `;
 
@@ -63,9 +64,9 @@ const StyledButton = styled(Button)`
   &:active,
   &:focus-visible {
     outline: none; /* Remove default focus outline */
-    background-color: #000; /* Maintain black background on focus */
+    background-color: white; /* Maintain black background on focus */
     border-color: #666; /* Maintain border color on focus */
-    color: #f5f5f5; /* Maintain text color on focus */
+    color: #fffff; /* Maintain text color on focus */
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3); /* Light glow effect on focus */
     /* Ensure no other styles are applied by the browser */
     -webkit-appearance: none; /* Remove default styles in WebKit browsers */
@@ -76,7 +77,7 @@ const StyledButton = styled(Button)`
   /* Ensure consistent appearance during transitions */
   &:focus:not(:focus-visible),
   &:active {
-    background-color: #000;
+    background-color: white;
     border-color: #666;
     color: #f5f5f5;
     box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
@@ -116,6 +117,13 @@ function Register() {
     }
   };
 
+  const registerFunc =  (e) => {
+    const res = registerUser(e);
+    if(res){
+      navigate("/chat")
+    }
+  }
+
   return (
     <Container
       initial={{ opacity: 0, y: -50 }}
@@ -123,7 +131,7 @@ function Register() {
       transition={{ duration: 0.5 }}
     >
       <FormWrapper>
-        <Form onSubmit={(e) => registerUser(e)}>
+        <Form onSubmit={(e) => registerFunc(e)}>
           <Heading
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -134,8 +142,8 @@ function Register() {
           <Stack gap={3}>
             <StyledFormControl
             style={{
-              backgroundColor:"#333",
-              color:"smokewhite"
+              backgroundColor:"grey",
+              color:"white"
             }}
               type="text"
               placeholder="Name"
@@ -149,7 +157,7 @@ function Register() {
             <StyledFormControl
             style={{
               backgroundColor:"#333",
-              color:"smokewhite"
+              color:"white"
             }}
               type="email"
               placeholder="Email"
@@ -163,7 +171,7 @@ function Register() {
             <StyledFormControl
             style={{
               backgroundColor:"#333",
-              color:"smokewhite"
+              color:"white"
             }}
               type="password"
               placeholder="Password"

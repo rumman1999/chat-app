@@ -1,13 +1,12 @@
 import { useContext, useState } from "react";
 import { Container, Stack } from "react-bootstrap";
-import UserChat from "../components/chat/UserChat";
-import { AuthContext } from "../context/AuthContext";
 import PotentialChat from "../components/chat/PotentialChat";
 import ChatBox from "../components/chat/ChatBox";
 import { motion } from 'framer-motion';
 import styled from 'styled-components';
 import "../index.css";
 import { ChatContext } from "../context/ChatContext";
+import ChatList from "../components/chat/ChatList";
 
 // Styled Components
 const ChatContainer = styled(Container)`
@@ -63,12 +62,6 @@ const ChatHeader = styled.div`
   position: relative;
 `;
 
-const NoChatsMessage = styled.div`
-  padding: 1rem;
-  text-align: center;
-  color: #aaa; /* Lighter grey text */
-`;
-
 
 const ToggleButton = styled(motion.button)`
   float:inline-end;
@@ -93,7 +86,6 @@ const ToggleButton = styled(motion.button)`
 
 function Chat() {
   const { userChats, isUserChatLoading, updateCurrentChat } = useContext(ChatContext);
-  const { user } = useContext(AuthContext);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => setSidebarOpen(prev => !prev);
@@ -118,18 +110,7 @@ function Chat() {
           display:"flex",
           flexDirection:"row"
         }}>
-          <Stack style={{width:"50%"}}>{
-            userChats?.length < 1 ? 
-              <NoChatsMessage>Start a new Chat...</NoChatsMessage> :
-              <>
-                {isUserChatLoading && <p>Loading Chats...</p>}
-                {userChats?.map((chat, index) => (
-                  <div key={index} onClick={() => updateCurrentChat(chat)} style={{ cursor: 'pointer' }}>
-                    <UserChat chat={chat} user={user} />
-                  </div>
-                ))}
-              </>
-          }</Stack>
+         <ChatList userChats={userChats} isUserChatLoading={isUserChatLoading} updateCurrentChat={updateCurrentChat}/>
           <ChatBox />
         </MessagesBox>
       </Stack>
