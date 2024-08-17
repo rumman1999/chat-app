@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import UserChat from "./UserChat"
 import { useContext } from "react";
 import { AuthContext } from "../../context/AuthContext";
+import "../../css/test.css"
 
 const NoChatsMessage = styled.div`
   padding: 1rem;
@@ -10,12 +11,16 @@ const NoChatsMessage = styled.div`
   color: #aaa; /* Lighter grey text */
 `;
 
-function ChatList({userChats , isUserChatLoading , updateCurrentChat}) {
+function ChatList({userChats , isUserChatLoading , updateCurrentChat , handleAIChatSelect}) {
 
     const { user } = useContext(AuthContext);
 
+
+    
+
   return (
-    <Stack style={{width:"50%"}}>{
+    <Stack style={{width:"50%", position:"relative"}}>
+      {
         userChats?.length < 1 ? 
           <NoChatsMessage>Start a new Chat...</NoChatsMessage> :
           <>
@@ -26,7 +31,9 @@ function ChatList({userChats , isUserChatLoading , updateCurrentChat}) {
               </div>
             ))}
           </>
-      }</Stack>
+      }
+      <div className="button-86" onClick={()=>handleAIChatSelect()}>Chat with AI</div>
+      </Stack>
   )
 }
 

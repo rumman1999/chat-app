@@ -8,6 +8,7 @@ export const ChatContext = createContext();
 
 export const ChatContextProvider = ({children , user}) => {
     // console.log(user)
+    const [chatWithAI , setChatWithAI] = useState(false)
 
     const [userChats , setUserChats] = useState([])
     const [isUserChatLoading , setIsUserChatLoading] =  useState(false)
@@ -24,7 +25,13 @@ export const ChatContextProvider = ({children , user}) => {
     const [socket , setSocket ] = useState(null)
     const [onlineUsers , setOnlineUsers] = useState([])
 
+      const handleAIChatSelect = useCallback(()=>{
+        // console.log("clicked true ai ")
+        setChatWithAI(true)
+    } ,[])
 
+
+    // console.log(userChats)
     const getUserChats = async() => {
         // console.log("response  user" , user)
         setIsUserChatLoading(true)
@@ -38,7 +45,7 @@ export const ChatContextProvider = ({children , user}) => {
                 return setUserChatError(response)
             }
             
-            console.log("response chat of user" , response)
+            // console.log("response chat of user" , response)
             setUserChats(response)
         }
     }
@@ -169,6 +176,7 @@ export const ChatContextProvider = ({children , user}) => {
 
     const updateCurrentChat = useCallback((chat)=>{
         // console.log(chat)
+        setChatWithAI(false)
         setCurrentChat(chat)
     } ,[])
 
@@ -196,7 +204,8 @@ export const ChatContextProvider = ({children , user}) => {
         userChats , setUserChats,
         userChatsError , isUserChatLoading,
         potentialChats , createChat ,currentChat, updateCurrentChat , userMessages , isUserMessagesLoading , 
-        messageError,sendTextMessage,onlineUsers,sendTextMessageError
+        messageError,sendTextMessage,onlineUsers,sendTextMessageError,
+        chatWithAI , handleAIChatSelect
     }}>
         {children}
     </ChatContext.Provider>)

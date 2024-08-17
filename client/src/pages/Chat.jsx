@@ -7,6 +7,7 @@ import styled from 'styled-components';
 import "../index.css";
 import { ChatContext } from "../context/ChatContext";
 import ChatList from "../components/chat/ChatList";
+import AIBot from "../components/chat/AIBot";
 
 // Styled Components
 const ChatContainer = styled(Container)`
@@ -85,7 +86,7 @@ const ToggleButton = styled(motion.button)`
 `;
 
 function Chat() {
-  const { userChats, isUserChatLoading, updateCurrentChat } = useContext(ChatContext);
+  const { userChats, isUserChatLoading, updateCurrentChat , chatWithAI , handleAIChatSelect} = useContext(ChatContext);
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   const toggleSidebar = () => setSidebarOpen(prev => !prev);
@@ -110,8 +111,11 @@ function Chat() {
           display:"flex",
           flexDirection:"row"
         }}>
-         <ChatList userChats={userChats} isUserChatLoading={isUserChatLoading} updateCurrentChat={updateCurrentChat}/>
-          <ChatBox />
+         <ChatList userChats={userChats} isUserChatLoading={isUserChatLoading} updateCurrentChat={updateCurrentChat} handleAIChatSelect={handleAIChatSelect}/>
+          
+          {
+            chatWithAI === true ? <AIBot/>:<ChatBox />
+          }
         </MessagesBox>
       </Stack>
     </ChatContainer>
